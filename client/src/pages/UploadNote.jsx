@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DashboardLayout from "../layouts/DashboardLayout";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const UploadNote = () => {
   const user = JSON.parse(localStorage.getItem("campusUser"));
@@ -30,9 +31,10 @@ const UploadNote = () => {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:5000/api/notes/upload", formData, {
+      await axios.post(`${API_URL}/notes/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          "x-user-role": user.role,
         },
       });
 

@@ -11,6 +11,14 @@ const Login = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const user = localStorage.getItem("campusUser");
+    const userData = JSON.parse(user);
+    if (userData.role === "admin") {
+      navigate("/admin/dashboard");
+    } else if (userData.role === "teacher") {
+      navigate("/teacher/dashboard");
+    } else {
+      navigate("/dashboard");
+    }
     if (!user) navigate("/");
   }, []);
 
@@ -28,8 +36,18 @@ const Login = () => {
         email,
         password,
       });
-      localStorage.setItem("campusUser", JSON.stringify(res.data.user));
-      navigate("/dashboard");
+      const user = res.data.user;
+      localStorage.setItem("campusUser", JSON.stringify(user));
+      if (user.role === "admin") {
+        toast.success("Login Successfull");
+        navigate("/admin/dashboard");
+      } else if (user.role === "teacher") {
+        toast.success("Login Successfull");
+        navigate("/teacher/dashboard");
+      } else {
+        toast.success("Login Successfull");
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err?.response?.data?.error || "Login Failed");
       toast.error("Login Failed");

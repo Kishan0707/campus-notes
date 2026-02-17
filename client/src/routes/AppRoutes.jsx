@@ -40,6 +40,30 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute allowedRoles={["teacher", "admin"]}>
+              <UploadNote />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <div>Teacher Dashboard</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <div>Admin Dashboard</div>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
