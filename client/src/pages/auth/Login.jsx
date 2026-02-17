@@ -12,14 +12,17 @@ const Login = () => {
   useEffect(() => {
     const user = localStorage.getItem("campusUser");
     const userData = JSON.parse(user);
-    if (userData.role === "admin") {
-      navigate("/admin/dashboard");
-    } else if (userData.role === "teacher") {
-      navigate("/teacher/dashboard");
-    } else {
-      navigate("/dashboard");
+    if (user) {
+      if (userData.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (userData.role === "teacher") {
+        navigate("/teacher/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     }
-    if (!user) navigate("/");
+
+    // if (!user) navigate("/");
   }, []);
 
   const [email, setEmail] = useState("");
