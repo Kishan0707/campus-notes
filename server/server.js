@@ -1,11 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import notesRoutes from "./routes/notesRoutes.js";
 import authRoutes from "./routes/authRoutes.js"; // ✅ MUST
 import bookmarksRoutes from "./routes/bookmarksRoutes.js";
 import pool from "./config/postgres.js";
-dotenv.config();
 
 const app = express();
 
