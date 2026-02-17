@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import { toast } from "react-toastify";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const StudentDashboard = () => {
   const [user, setUser] = useState(null);
@@ -26,9 +27,7 @@ const StudentDashboard = () => {
 
   const fetchBookmarkCount = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/bookmarks/count/${user.id}`,
-      );
+      const res = await axios.get(`${API_URL}/bookmarks/count/${user.id}`);
       setBookmarkCount(res.data.count);
     } catch (err) {
       toast.error("❌ Error fetching bookmark count", err);
@@ -37,7 +36,7 @@ const StudentDashboard = () => {
 
   const fetchNotes = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/notes");
+      const res = await axios.get(`${API_URL}/notes`);
       setNotes(res.data);
     } catch (err) {
       toast.error("❌ Error fetching notes", err);
@@ -75,7 +74,20 @@ const StudentDashboard = () => {
           <p className="text-3xl mt-2">{notes.slice(0, 3).length}</p>
         </div>
       </div>
-
+      {user?.role === "teacher" && (
+        <div className="bg-blue-100 p-4 rounded mt-6">
+          <p className="font-semibold">
+            Teacher Panel: Upload notes from sidebar
+          </p>
+        </div>
+      )}
+      {user?.role === "admin" && (
+        <div className="bg-red-100 p-6 rounded mt-6">
+          <p className="font-semibold">
+            Admin Panel: Manage all use and content
+          </p>
+        </div>
+      )}
       <div className="bg-white p-6 rounded shadow mt-8">
         <h3 className="text-lg font-bold mb-4">Recent Notes</h3>
 
