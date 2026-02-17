@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import pool from "../config/postgres.js";
+import { checkRole } from "../models/middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -21,24 +22,29 @@ const upload = multer({
 });
 
 /* ========= UPLOAD NOTE ========= */
-router.post("/upload", upload.single("pdf"), async (req, res) => {
-  try {
-    const { title, subject_id, semester_id, uploaded_by } = req.body;
+router.post(
+  "/upload",
+  upload.single("pdf"),
+  checkRole(["admin", "teacher"]),
+  async (req, res) => {
+    try {
+      const { title, subject_id, semester_id, uploaded_by } = req.body;
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+      const fileUrl = `/uploads/${req.file.filename}`;
 
-    await pool.query(
-      `INSERT INTO notes
+      await pool.query(
+        `INSERT INTO notes
        (title, file_url, subject_id, semester_id, uploaded_by)
        VALUES ($1,$2,$3,$4,$5)`,
-      [title, fileUrl, subject_id, semester_id, uploaded_by],
-    );
+        [title, fileUrl, subject_id, semester_id, uploaded_by],
+      );
 
-    res.status(201).json({ message: "PDF uploaded successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+      res.status(201).json({ message: "PDF uploaded successfully" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+);
 
 /* ========= GET NOTES ========= */
 router.get("/", async (req, res) => {
