@@ -1,6 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+// import dotenv from "dotenv";
+// dotenv.config();
+const API_URL = import.meta.env.VITE_API_URL;
+console.log(API_URL, "API url");
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,14 +35,14 @@ const Register = () => {
     }
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/auth/register", {
+      await axios.post(`${API_URL}/auth/register`, {
         name,
         email,
         password,
       });
       navigate("/");
     } catch (err) {
-      setError(err?.response?.data?.error || "Register Failed");
+      setError(err.response?.data?.error || "Register Failed");
     } finally {
       setLoading(false);
     }

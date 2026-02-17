@@ -3,7 +3,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import notesRoutes from "./routes/notesRoutes.js";
-import authRoutes from "./routes/authRoutes.js"; // ✅ MUST
+import authRoutes from "./routes/authRoutes.js";
 import bookmarksRoutes from "./routes/bookmarksRoutes.js";
 import pool from "./config/postgres.js";
 
