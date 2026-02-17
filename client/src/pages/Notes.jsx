@@ -67,10 +67,9 @@ const Notes = () => {
 
               <div className="flex items-center justify-between">
                 <a
-                  href={note.file_url}
+                  href={`http://localhost:5000${note.file_url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 text-sm font-medium"
                 >
                   View / Download
                 </a>

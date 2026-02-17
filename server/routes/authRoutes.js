@@ -1,49 +1,59 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import db from "../config/db.js";
+import pool from "../config/postgres.js";
 
 const router = express.Router();
 
+/* ================= REGISTER ================= */
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
 
-  const checkSql = "SELECT id FROM users WHERE email = ?";
-  db.query(checkSql, [email], async (err, result) => {
-    if (result.length > 0) {
+    // 🔍 check email
+    const checkResult = await pool.query(
+      "SELECT id FROM users WHERE email = $1",
+      [email],
+    );
+
+    if (checkResult.rows.length > 0) {
       return res.status(400).json({ error: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const insertSql =
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+    // ➕ insert user
+    await pool.query(
+      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
+      [name, email, hashedPassword],
+    );
 
-    db.query(insertSql, [name, email, hashedPassword], (err) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-
-      res.status(201).json({
-        message: "User registered successfully",
-      });
+    res.status(201).json({
+      message: "User registered successfully",
     });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-router.post("/login", (req, res) => {
-  const { email, password } = req.body;
+/* ================= LOGIN ================= */
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const sql = "SELECT * FROM users WHERE email = ?";
-  db.query(sql, [email], async (err, users) => {
-    if (users.length === 0) {
+    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+
+    if (result.rows.length === 0) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const user = users[0];
+    const user = result.rows[0];
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -59,7 +69,10 @@ router.post("/login", (req, res) => {
         role: user.role,
       },
     });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 export default router;

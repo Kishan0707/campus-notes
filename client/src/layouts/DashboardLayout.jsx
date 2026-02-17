@@ -1,3 +1,4 @@
+// import { Analytics } from "@vercel/analytics/next";
 import Navbar from "../compoents/Navbar";
 import Sidebar from "../compoents/Sidebar";
 const DashboardLayout = ({ children }) => {
