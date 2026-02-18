@@ -39,6 +39,14 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// router.post("/teacher/register", async (req, res) => {
+//   try {
+//     const [name, email, password, role "teacher"] = req.body;
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
 
 /* ================= LOGIN ================= */
 router.post("/login", async (req, res) => {

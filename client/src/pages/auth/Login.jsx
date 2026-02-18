@@ -22,7 +22,7 @@ const Login = () => {
       }
     }
 
-    // if (!user) navigate("/");
+    if (!user) navigate("/");
   }, []);
 
   const [email, setEmail] = useState("");
@@ -103,7 +103,11 @@ const Login = () => {
                 className="absolute right-3 top-3 text-sm text-blue-600 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? (
+                  <i class="fa-solid fa-eye-slash"></i>
+                ) : (
+                  <i className="fa-solid fa-eye"></i>
+                )}
               </span>
             </div>
           </div>
